@@ -1,31 +1,31 @@
-# Compilador - Asignatura de Compiladores
+# Compiler - Compilers Course
 
-Implementación completa de un compilador que traduce código fuente de alto nivel a código máquina ejecutable (IA32). El proyecto abarca todas las fases del proceso de compilación: análisis léxico, sintáctico, semántico y generación de código ensamblador.
+Complete compiler implementation that translates high-level source code into executable machine code (IA32). The project covers every phase of the compilation pipeline: lexical, syntactic, and semantic analysis, plus assembly code generation.
 
-## Características
+## Features
 
-- **Front-End (Análisis)**
-  - Análisis Léxico con JFlex (Generador de escáneres)
-  - Análisis Sintáctico con CUP (Parser LALR(1))
-  - Construcción de Árbol Sintáctico Abstracto (AST)
-  - Análisis Semántico con Sistema de Tipos Subyacentes Básicos (TSB)
-  - Tabla de Símbolos con gestión de ámbitos (Scopes)
+- **Front-End (Analysis)**
+  - Lexical analysis with JFlex (scanner generator)
+  - Syntactic analysis with CUP (LALR(1) parser)
+  - Abstract Syntax Tree (AST) construction
+  - Semantic analysis with an Underlying Basic Type System (TSB)
+  - Symbol table with scope management
 
-- **Back-End (Síntesis)**
-  - Generación de Código Intermedio (C3@ - Código de Tres Direcciones)
-  - Generación de Código Ensamblador (IA32, sintaxis AT&T)
-  - Integración con Runtime en C para I/O
-  - Enlazado automático con GCC
+- **Back-End (Synthesis)**
+  - Intermediate code generation (C3@ - Three-Address Code)
+  - Assembly code generation (IA32, AT&T syntax)
+  - Integration with a C runtime for I/O
+  - Automatic linking via GCC
 
-- **Recuperación de Errores**
-  - Panic Mode para recuperación sintáctica
-  - Mensajes de error detallados en español
-  - Detección múltiple de errores en una pasada
+- **Error Recovery**
+  - Panic Mode for syntactic recovery
+  - Detailed error messages (in Spanish)
+  - Multiple error detection in a single pass
 
-## Arquitectura
+## Architecture
 
 ```
-Código Fuente (.txt)
+Source Code (.txt)
         ↓
     Scanner (JFlex)
         ↓
@@ -33,229 +33,229 @@ Código Fuente (.txt)
         ↓
     AST (Abstract Syntax Tree)
         ↓
-    Análisis Semántico
+    Semantic Analysis
         ↓
-    Generador Código Intermedio (C3@)
+    Intermediate Code Generator (C3@)
         ↓
-    Generador Ensamblador (IA32)
+    Assembly Generator (IA32)
         ↓
     GCC Linker
         ↓
-    Ejecutable
+    Executable
 ```
 
-## Lenguaje Soportado
+## Supported Language
 
-### Tipos de Datos
-- `int` - Enteros 32-bit
-- `char` - Caracteres ASCII
-- `bool` - Valores lógicos (true/false)
-- Arrays unidimensionales: `int arr[10];`
+### Data Types
+- `int` - 32-bit integers
+- `char` - ASCII characters
+- `bool` - Boolean values (true/false)
+- One-dimensional arrays: `int arr[10];`
 
-### Estructuras de Control
-- `if/else` - Condicionales
-- `while` - Bucles iterativos
-- `for` - Bucles completos
-- `switch/case` - Selección múltiple
+### Control Structures
+- `if/else` - Conditionals
+- `while` - Iterative loops
+- `for` - Full for-loops
+- `switch/case` - Multi-way selection
 
-### Operadores
-- **Aritméticos**: `+`, `-`, `*`, `/`, `%`
-- **Relacionales**: `==`, `!=`, `<`, `>`, `<=`, `>=`
-- **Lógicos**: `&&`, `||`, `!`
-- **Unarios**: `-`, `!`
+### Operators
+- **Arithmetic**: `+`, `-`, `*`, `/`, `%`
+- **Relational**: `==`, `!=`, `<`, `>`, `<=`, `>=`
+- **Logical**: `&&`, `||`, `!`
+- **Unary**: `-`, `!`
 
-### Entrada/Salida
+### Input/Output
 ```
-leer(variable);      // Lee de entrada estándar
-imprimir(expresion); // Imprime a salida estándar
+leer(variable);      // Reads from standard input
+imprimir(expresion); // Prints to standard output
 ```
-## Requisitos
 
-### Linux con Arquitectura x86 (32/64-bit)
-- **Java JDK 8+** - Para compilar el compilador
+## Requirements
+
+### Linux (x86, 32/64-bit)
+- **Java JDK 8+** - to build the compiler
   - Ubuntu/Debian: `sudo apt install openjdk-11-jdk`
-- **GCC (GNU Compiler Collection)** - Para ensamblado y enlazado
+- **GCC (GNU Compiler Collection)** - for assembling and linking
   - Ubuntu/Debian: `sudo apt install gcc`
 
 ### macOS Intel (x86-64)
-- **Java JDK 8+** - Para compilar el compilador
+- **Java JDK 8+** - to build the compiler
   - `brew install openjdk@11`
-- **GCC (GNU Compiler Collection)** - Para ensamblado y enlazado
+- **GCC (GNU Compiler Collection)** - for assembling and linking
   - `brew install gcc`
 
-### macOS con Procesador ARM
+### macOS on Apple Silicon (ARM)
 
-**Requisitos:**
-- **Java JDK 8+** - Para compilar el compilador
+**Requirements:**
+- **Java JDK 8+** - to build the compiler
   - `brew install openjdk@11`
-- **Docker Desktop** - Para la compilación final (gcc + linking)
-  - Descargar de: https://www.docker.com/products/docker-desktop
-  - Tener Docker Desktop abierto/ejecutándose en background
+- **Docker Desktop** - for the final build step (gcc + linking)
+  - Download from: https://www.docker.com/products/docker-desktop
+  - Docker Desktop must be open/running in the background
 
-**Por qué Docker:**
-El compilador genera código IA32 (Intel 32-bit), incompatible con procesadores ARM. El script `run.sh` detecta automáticamente esto y usa Docker solo para la fase final (ensamblado y enlazado con gcc).
+**Why Docker:**
+The compiler emits IA32 (Intel 32-bit) code, which is incompatible with ARM processors. The `run.sh` script detects this automatically and uses Docker only for the final phase (assembling and linking with gcc).
 
-**Flujo automático:**
+**Automatic flow:**
 ```
-1. Java compila el compilador (en ARM)
-2. Se genera código ensamblador .s (en ARM)
-3. Docker Desktop compila con gcc (en contenedor x86 compatible)
-4. Ejecutable final
+1. Java builds the compiler (on ARM)
+2. A .s assembly file is generated (on ARM)
+3. Docker Desktop assembles it with gcc (in an x86-compatible container)
+4. Final executable
 ```
 
 ### Windows (x86-64)
-- **Java JDK 8+** - Para compilar el compilador
-  - Descargar de: https://www.oracle.com/java/technologies/downloads/
-- **GCC (GNU Compiler Collection)** - Para ensamblado y enlazado
-  - Opción 1: MinGW - https://www.mingw-w64.org/
-  - Opción 2: TDM-GCC - https://jmeubank.github.io/tdm-gcc/
-  - **Importante:** Añadir carpeta `bin` de GCC al PATH del sistema
+- **Java JDK 8+** - to build the compiler
+  - Download from: https://www.oracle.com/java/technologies/downloads/
+- **GCC (GNU Compiler Collection)** - for assembling and linking
+  - Option 1: MinGW - https://www.mingw-w64.org/
+  - Option 2: TDM-GCC - https://jmeubank.github.io/tdm-gcc/
+  - **Important:** add GCC's `bin` folder to the system PATH
 
-### Flag -m32 (automático)
-- Los scripts `run.sh` y `run.bat` incluyen `-m32` automáticamente para asegurar compatibilidad con sistemas 64-bit
+### -m32 flag (automatic)
+- The `run.sh` and `run.bat` scripts include `-m32` automatically to ensure compatibility on 64-bit systems
 
-## Compilación y Ejecución
+## Building and Running
 
-### Linux y macOS Intel (x86-64)
+### Linux and macOS Intel (x86-64)
 
 ```bash
-# Primera vez: dar permisos de ejecución
+# First time only: grant execute permission
 chmod +x run.sh
 
-# Compilar y ejecutar
-./run.sh nombrePrograma.txt
+# Build and run
+./run.sh programName.txt
 ```
 
-### macOS con Procesador ARM
+### macOS on Apple Silicon (ARM)
 
-El script lo hace automáticamente
+The script handles this automatically.
 
 ```bash
-# 1. Abre Docker Desktop (una sola vez)
-# 2. En la terminal:
+# 1. Open Docker Desktop (once)
+# 2. In the terminal:
 chmod +x run.sh
-./run.sh nombrePrograma.txt
+./run.sh programName.txt
 ```
 
 ### Windows (x86-64)
 
 ```cmd
-REM No requiere permisos especiales
-.\run.bat nombrePrograma.txt
+REM No special permissions required
+.\run.bat programName.txt
 ```
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 Practica-Compiladores-2025/
-├── Compilador/              # Código Java del compilador
+├── Compilador/              # Compiler's Java source
 │   ├── AnalizadorSemantico.java
 │   ├── GeneradorCodigo.java
 │   ├── GeneradorEnsamblador.java
 │   ├── GestorErrores.java
 │   ├── TablaSimbolos.java
 │   └── ...
-├── ArbolSintactico/         # Nodos del AST
+├── ArbolSintactico/         # AST node classes
 │   ├── NodoBase.java
 │   ├── NodoExpresion.java
 │   ├── NodoSentencia.java
 │   └── ...
-├── CodigoIntermedio/        # Representación intermedia
+├── CodigoIntermedio/        # Intermediate representation
 │   ├── Instruccion.java
 │   ├── GeneradorCodigo.java
 │   └── TipoInstruccion.java
-├── Simbolos/                # Gestión de símbolos
+├── Simbolos/                # Symbol management
 │   ├── TablaSimbolos.java
 │   ├── Descripcion.java
 │   └── Categoria.java
-├── TESTS/                   # Casos de prueba
+├── TESTS/                   # Test cases
 │   ├── testTipos.txt
 │   ├── testOperaciones.txt
 │   ├── testErroresSemanticos.txt
 │   └── ...
-├── scanner.flex             # Especificación JFlex
-├── parser.cup               # Especificación CUP
-├── runtime.c                # Librería de I/O en C
-├── run.sh                   # Script para Linux/macOS
-├── run.bat                  # Script para Windows
-└── DOCUMENTACION.pdf        # Documentación completa (38 páginas)
+├── scanner.flex             # JFlex specification
+├── parser.cup               # CUP specification
+├── runtime.c                # C I/O library
+├── run.sh                   # Script for Linux/macOS
+├── run.bat                  # Script for Windows
+└── DOCUMENTACION.pdf        # Full documentation, 38 pages (in Spanish)
 ```
 
-## Casos de Prueba
+## Test Cases
 
-El proyecto incluye múltiples casos de prueba que validan:
+The project includes multiple test cases validating:
 
-### Casos Correctos
-- **testTipos.txt** - Sistema de tipos y estructuras de datos
-- **testOperaciones.txt** - Control de flujo y funciones
-- **testOperadores.txt** - Expresiones complejas
-- **testExpresionesAritmeticasLogicas.txt** - Evaluación de expresiones
-- **testCalculadora.txt** - Programa interactivo completo
+### Valid Cases
+- **testTipos.txt** - Type system and data structures
+- **testOperaciones.txt** - Control flow and functions
+- **testOperadores.txt** - Complex expressions
+- **testExpresionesAritmeticasLogicas.txt** - Expression evaluation
+- **testCalculadora.txt** - Full interactive program
 
-### Casos de Error
-- **testErroresSemanticos.txt** - Variables no declaradas, incompatibilidad de tipos
-- **testErroresMixtos.txt** - Recuperación de errores en cascada
-- **testErrorCalculadora.txt** - Robustez ante errores sintácticos
+### Error Cases
+- **testErroresSemanticos.txt** - Undeclared variables, type mismatches
+- **testErroresMixtos.txt** - Cascading error recovery
+- **testErrorCalculadora.txt** - Robustness against syntax errors
 
-Ejecutar un test:
+Running a test:
 ```bash
 ./run.sh TESTS/testTipos.txt
 ```
 
-## Documentación Detallada
+## Detailed Documentation
 
-Para información exhaustiva sobre:
-- Diseño de la gramática
-- Implementación de la Tabla de Símbolos
-- Estrategias de generación de código
-- Análisis semántico y sistema de tipos
-- Recuperación de errores
+For in-depth coverage of:
+- Grammar design
+- Symbol table implementation
+- Code generation strategy
+- Semantic analysis and the type system
+- Error recovery
 
-Ver **DOCUMENTACION.pdf**
+See **DOCUMENTACION.pdf** (Spanish, 38 pages).
 
-## Componentes Principales
+## Main Components
 
-### 1. Análisis Léxico (JFlex)
-- Reconocimiento de tokens: palabras clave, identificadores, literales
-- Gestión de líneas y columnas para reportes de error
-- Secuencias de escape en caracteres
+### 1. Lexical Analysis (JFlex)
+- Token recognition: keywords, identifiers, literals
+- Line/column tracking for error reporting
+- Escape sequences in character literals
 
-### 2. Análisis Sintáctico (CUP)
-- Parser LALR(1) con precedencia de operadores
-- Recuperación en modo pánico (Panic Mode)
-- Construcción on-the-fly del AST
+### 2. Syntactic Analysis (CUP)
+- LALR(1) parser with operator precedence
+- Panic Mode recovery
+- On-the-fly AST construction
 
-### 3. Análisis Semántico
-- Validación de tipos estricta
-- Gestión de ámbitos (Global, Local, Parámetros)
-- Cálculo de direcciones de memoria (Offsets)
-- Detección de errores: variables no declaradas, tipos incompatibles, etc.
+### 3. Semantic Analysis
+- Strict type validation
+- Scope management (Global, Local, Parameters)
+- Memory address (offset) computation
+- Error detection: undeclared variables, incompatible types, etc.
 
-### 4. Generación de Código Intermedio
-- Representación en Código de Tres Direcciones (C3@)
-- Variables temporales y etiquetas simbólicas
-- Gestión automática de temporales
+### 4. Intermediate Code Generation
+- Three-Address Code (C3@) representation
+- Temporary variables and symbolic labels
+- Automatic temporary-variable management
 
-### 5. Generación de Ensamblador
-- Traducción a IA32 (sintaxis AT&T)
-- Gestión del Stack Frame
-- Integración con runtime.c para I/O
+### 5. Assembly Generation
+- Translation to IA32 (AT&T syntax)
+- Stack frame management
+- Integration with runtime.c for I/O
 
-## Optimizaciones Implementadas
+## Implemented Optimizations
 
-- **Flattening de AST**: Eliminación de anidamiento innecesario
-- **Recuperación inteligente de errores**: Prevención de cascada de falsos errores
-- **Compatibilidad x64**: Flag -m32 para entornos de 64 bits
-- **Limpieza automática**: Scripts que limpian archivos compilados antes de cada ejecución
+- **AST flattening**: removes unnecessary nesting
+- **Smart error recovery**: prevents cascades of false-positive errors
+- **x64 compatibility**: `-m32` flag for 64-bit environments
+- **Automatic cleanup**: scripts clear compiled artifacts before each run
 
+## Author
 
-## Autor
+Carlos Garrido del Toro
+Computer Engineering - UIB (University of the Balearic Islands)
+Course: Compilers - 2025-2026
 
-Carlos Garrido del Toro  
-Ingeniería Informática - UIB (Universidad de las Islas Baleares)  
-Asignatura: Compiladores - Curso 2025-2026
-
-Proyecto académico
+Academic project
 
 ---
-**Para más detalles, consultar DOCUMENTACION.pdf**
+**For further detail, see DOCUMENTACION.pdf**
